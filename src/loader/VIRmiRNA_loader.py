@@ -26,12 +26,12 @@ class VIRmiRNALoader:
             for row in reader:
                 name = "-".join(row["miRNA"].split("-")[1:]) # Extract the miRNA name without the species prefix
                 species = row["Virus"].lower()
-                sequence = row["miRNA_Sequence"]
+                sequence = row["miRNA_Sequence"].upper()
                 name_pre = "-".join(row["Pre_miRNA"].split("-")[1:]) # Extract the miRNA name without the species prefix
                 database_id = row["ID"]
                 with open(self.output_file, "a") as output_file:
                     if name_pre not in self.seen_pre_miRNAs:
-                        sequence_pre = row["Pre_miRNA_Sequence"]
+                        sequence_pre = row["Pre_miRNA_Sequence"].upper()
                         output_file.write(f"{name_pre},{species},{sequence_pre},{self.source_db},{MirnaType.pre.value},{database_id}\n")
                         self.seen_pre_miRNAs.add(name_pre)
                     output_file.write(f"{name},{species},{sequence},{self.source_db},{MirnaType.mature.value},{database_id}\n")

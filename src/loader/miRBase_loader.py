@@ -6,7 +6,7 @@ class MirBaseLoader:
     def __init__(self, input_directory, output_directory):
         self.input_directory = input_directory
         self.output_file = os.path.join(output_directory, "miRBase.csv")
-        self.mirbase_version = "mirBase/v22.1"
+        self.source_db = "mirBase/v22.1"
         
     def load(self):
         if os.path.exists(self.output_file):
@@ -24,7 +24,7 @@ class MirBaseLoader:
         for record in SeqIO.parse(os.path.join(self.input_directory, filename), "fasta"):
             parts = record.description.split()
             name = parts[4] if len(parts) > 4 else "UNKOWN"
-            species = parts[0].split("-")[0]
+            species = parts[0].split("-")[0].lower()
             database_id = parts[1]
             with open(self.output_file, "a") as output_file:
-                output_file.write(f"{name},{species.lower()},{record.seq.upper()},{self.mirbase_version},{MirnaType.pre.value},{database_id}\n")
+                output_file.write(f"{name},{species},{record.seq.upper()},{self.source_db},{MirnaType.pre.value},{database_id}\n")
