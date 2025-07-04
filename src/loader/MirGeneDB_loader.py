@@ -37,4 +37,4 @@ class MirGeneDBLoader:
                 name = interim_name.split("_")[0]
 
             with open(self.output_file, "a") as output_file:
-                output_file.write(f"{name},{species},{record.seq.upper()},{self.mirbase_version},{mirna_type},NA\n")
+                output_file.write(f"{name},{species},{record.seq.upper()},{self.mirbase_version},{mirna_type},NA\n") # Should I give AC here?
