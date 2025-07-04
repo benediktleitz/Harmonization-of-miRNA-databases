@@ -1,23 +1,30 @@
 import os
 from Bio import SeqIO
-from models.mirna_entry import MirnaEntry
 from models.mirna_type import MirnaType
 
 class MirBaseLoader:
-    def __init__(self, directory):
-        self.directory = directory
-        self.entries = []
+    def __init__(self, input_directory, output_directory):
+        self.input_directory = input_directory
+        self.output_file = os.path.join(output_directory, "miRBase.csv")
+        self.mirbase_version = "mirBase/v22.1"
         
     def load(self):
+        if os.path.exists(self.output_file):
+            os.remove(self.output_file)
+        with open(self.output_file, "w") as output_file:
+            output_file.write("name,species,sequence,source_db,mirna_type,database_id\n")
+        
+        self.load_file("hairpin.fa")
+        self.load_file("mature.fa")
 
-    def load_hairpin(self):
-        for record in SeqIO.parse(os.path.join(self.directory, "hairpin.fa"), "fasta"):
+# Create a csv file from the miRBase file that is given as input.
+# The csv file will contain the following columns:
+# name,species,sequence,source_db,mirna_type,database_id
+    def load_file(self, filename):
+        for record in SeqIO.parse(os.path.join(self.input_directory, filename), "fasta"):
             parts = record.description.split()
             name = parts[4] if len(parts) > 4 else "UNKOWN"
             species = parts[0].split("-")[0]
             database_id = parts[1]
-            entry = MirnaEntry(name=name, species=species, sequence=record.seq, source_db="miRBase", 
-                               mirna_type=MirnaType.pre, database_id=database_id)
-            self.entries.append(entry)
-            if len(parts) <= 4:
-                print(f" Warning: Unexpected header format: {record.description}")
+            with open(self.output_file, "a") as output_file:
+                output_file.write(f"{name},{species},{record.seq},{self.mirbase_version},{MirnaType.pre.value},{database_id}\n")
