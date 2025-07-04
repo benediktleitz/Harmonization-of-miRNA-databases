@@ -27,14 +27,14 @@ class PmiRENLoader:
         with open(file_path, "r") as file:
             reader = csv.DictReader(file, delimiter="\t")
             for row in reader:
-                name_pre = row["miRNA_locus_ID"].split("-")[1]
+                name_pre = "-".join(row["miRNA_locus_ID"].split("-")[1:]) # Extract the miRNA name without the species prefix
                 species = row["miRNA_locus_ID"].split("-")[0].lower()
                 database_id = row["miRNA_locus_accession"]
                 sequence_pre = row["Stem_loop_seq"]
                 mature_seq = row["mature_seq"]
                 star_seq = row["star_seq"]
 
-                # Convert star/non start to 5p/3p based on strand and start positions
+                # Convert star/non star to 5p/3p based on strand and start positions
                 strand = row["Strand"]
                 mature_start = int(row["mature_start"])
                 star_start = int(row["star_start"])
@@ -47,6 +47,6 @@ class PmiRENLoader:
                 name_star = f"{name_pre}-3p" if mature_is_5p else f"{name_pre}-5p"
                 
                 with open(self.output_file, "a") as output_file:
-                    output_file.write(f"{name_pre},{species},{sequence_pre}, {self.source_db},{MirnaType.pre.value},{database_id}\n")
-                    output_file.write(f"{name_mature},{species},{mature_seq}, {self.source_db},{MirnaType.mature.value},{database_id}\n")
-                    output_file.write(f"{name_star},{species},{star_seq}, {self.source_db},{MirnaType.mature.value},{database_id}\n")
+                    output_file.write(f"{name_pre},{species},{sequence_pre},{self.source_db},{MirnaType.pre.value},{database_id}\n")
+                    output_file.write(f"{name_mature},{species},{mature_seq},{self.source_db},{MirnaType.mature.value},{database_id}\n")
+                    output_file.write(f"{name_star},{species},{star_seq},{self.source_db},{MirnaType.mature.value},{database_id}\n")
