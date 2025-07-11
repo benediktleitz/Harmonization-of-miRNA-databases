@@ -5,3 +5,4 @@ class MirnaType(Enum):
     pri = "primary"
     mature = "mature"
     loop = "loop"
+    hairpin = "hairpin"
