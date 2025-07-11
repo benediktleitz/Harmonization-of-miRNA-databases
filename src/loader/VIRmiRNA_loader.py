@@ -22,7 +22,7 @@ class VIRmiRNALoader:
 # name,species_name,species_abbr,sequence,source_db,source_db_version,mirna_type,database_id
 # It could easily be extended to include more information if needed, like the genomic coordinates.
     def load_file(self, file_path):
-        with open(file_path, "r") as file:
+        with open(file_path, "r") as file, open(self.output_file, "a") as output_file:
             reader = csv.DictReader(file, delimiter="\t")
             for row in reader:
                 name = "-".join(row["miRNA"].split("-")[1:]) # Extract the miRNA name without the species prefix
@@ -38,9 +38,9 @@ class VIRmiRNALoader:
                     name_pre = "-".join(name_pre.split("-")[1:])
 
                 database_id = row["ID"]
-                with open(self.output_file, "a") as output_file:
-                    if name_pre not in self.seen_pre_miRNAs and name_pre != "na":
-                        sequence_pre = row["Pre_miRNA_Sequence"].upper()
-                        output_file.write(f"{name_pre},{species_name},{species_abbr},{sequence_pre},{self.source_db},{self.source_db_version},{MirnaType.pre.value},{database_id}\n")
-                        self.seen_pre_miRNAs.add(name_pre)
-                    output_file.write(f"{name},{species_name},{species_abbr},{sequence},{self.source_db},{self.source_db_version},{MirnaType.mature.value},{database_id}\n")
+                
+                if name_pre not in self.seen_pre_miRNAs and name_pre != "na":
+                    sequence_pre = row["Pre_miRNA_Sequence"].upper()
+                    output_file.write(f"{name_pre},{species_name},{species_abbr},{sequence_pre},{self.source_db},{self.source_db_version},{MirnaType.pre.value},{database_id}\n")
+                    self.seen_pre_miRNAs.add(name_pre)
+                output_file.write(f"{name},{species_name},{species_abbr},{sequence},{self.source_db},{self.source_db_version},{MirnaType.mature.value},{database_id}\n")

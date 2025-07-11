@@ -5,7 +5,7 @@ from models.mirna_type import MirnaType
 class MirGeneDBLoader:
     def __init__(self, input_directory, output_directory):
         self.input_directory = input_directory
-        self.output_file = os.path.join(output_directory, "mirGeneDB.csv")
+        self.output_file = os.path.join(output_directory, "MirGeneDB.csv")
         self.source_db = "mirGeneDB"
         self.source_db_version = "v3.0"
         

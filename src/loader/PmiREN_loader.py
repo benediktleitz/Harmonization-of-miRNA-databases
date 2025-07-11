@@ -26,7 +26,7 @@ class PmiRENLoader:
 # name,species_name,species_abbr,sequence,source_db,source_db_version,mirna_type,database_id
 # It could easily be extended to include more information if needed, like the genomic coordinates.
     def load_file(self, file_path, species_name):
-        with open(file_path, "r") as file:
+        with open(file_path, "r") as file, open(self.output_file, "a") as output_file:
             reader = csv.DictReader(file, delimiter="\t")
             for row in reader:
                 name_pre = "-".join(row["miRNA_locus_ID"].split("-")[1:]) # Extract the miRNA name without the species prefix
@@ -53,7 +53,6 @@ class PmiRENLoader:
                 name_mature = name_mature.replace("MIR", "miR")
                 name_star = name_star.replace("MIR", "miR")
 
-                with open(self.output_file, "a") as output_file:
-                    output_file.write(f"{name_pre},{species_name},{species_abbr},{sequence_pre},{self.source_db},{self.source_db_version},{MirnaType.pre.value},{database_id}\n")
-                    output_file.write(f"{name_mature},{species_name},{species_abbr},{mature_seq},{self.source_db},{self.source_db_version},{MirnaType.mature.value},{database_id}\n")
-                    output_file.write(f"{name_star},{species_name},{species_abbr},{star_seq},{self.source_db},{self.source_db_version},{MirnaType.mature.value},{database_id}\n")
+                output_file.write(f"{name_pre},{species_name},{species_abbr},{sequence_pre},{self.source_db},{self.source_db_version},{MirnaType.pre.value},{database_id}\n")
+                output_file.write(f"{name_mature},{species_name},{species_abbr},{mature_seq},{self.source_db},{self.source_db_version},{MirnaType.mature.value},{database_id}\n")
+                output_file.write(f"{name_star},{species_name},{species_abbr},{star_seq},{self.source_db},{self.source_db_version},{MirnaType.mature.value},{database_id}\n")
