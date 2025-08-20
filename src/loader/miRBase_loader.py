@@ -39,4 +39,4 @@ class MirBaseLoader:
             species_abbr = parts[0].split("-")[0].lower()
             database_id = parts[1]
             with open(self.output_file, "a") as output_file:
-                output_file.write(f"{name},NA,{species_name},{species_abbr},{record.seq.upper()},{self.source_db},{self.source_db_version},{mirna_type},{database_id}\n")
+                output_file.write(f"{name},{species_name},{species_abbr},{record.seq.upper()},{self.source_db},{self.source_db_version},{mirna_type},{database_id}\n")
